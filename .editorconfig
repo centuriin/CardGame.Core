@@ -256,7 +256,7 @@ dotnet_diagnostic.CA1507.severity = error
 csharp_style_prefer_utf8_string_literals = true:suggestion
 csharp_style_prefer_method_group_conversion = true:silent
 csharp_style_prefer_top_level_statements = true:silent
-dotnet_diagnostic.CA1805.severity = suggestion
+
 csharp_style_prefer_readonly_struct = true:suggestion
 
 [*.vb]
@@ -306,7 +306,6 @@ dotnet_naming_style.всечастиспрописнойбуквы.required_prefix =
 dotnet_naming_style.всечастиспрописнойбуквы.required_suffix = 
 dotnet_naming_style.всечастиспрописнойбуквы.word_separator = 
 dotnet_naming_style.всечастиспрописнойбуквы.capitalization = pascal_case
-dotnet_diagnostic.CA1047.severity = error
 
 [*.{cs,vb}]
 
@@ -353,6 +352,8 @@ dotnet_style_parentheses_in_other_binary_operators = always_for_clarity:silent
 dotnet_style_parentheses_in_relational_binary_operators = always_for_clarity:silent
 dotnet_style_parentheses_in_other_operators = never_if_unnecessary:silent
 dotnet_style_require_accessibility_modifiers = always:error
+csharp_style_prefer_primary_constructors = false
+
 dotnet_diagnostic.CA1068.severity = warning
 dotnet_diagnostic.CA1067.severity = warning
 dotnet_diagnostic.CA1012.severity = error
@@ -364,3 +365,5 @@ dotnet_diagnostic.CA1827.severity = error
 dotnet_diagnostic.CA1828.severity = error
 dotnet_diagnostic.CA1829.severity = error
 dotnet_diagnostic.CA2211.severity = warning
+dotnet_diagnostic.CA1047.severity = error
+dotnet_diagnostic.CA1805.severity = suggestion
