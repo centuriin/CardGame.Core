@@ -1,4 +1,6 @@
-﻿using Xunit;
+﻿using CardGame.Core.State;
+
+using Xunit;
 
 namespace CardGame.Core.Tests;
 

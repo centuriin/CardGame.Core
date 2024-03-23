@@ -11,7 +11,7 @@ public static class CardSets
     private const int DEFAULT36_PACK_COUNT = 9;
 
     private const CardType FIRST_DEFAULT52_CARD = CardType.Two;
-    private const int DEFAULT52_PACK_COUNT = 4;
+    private const int DEFAULT52_PACK_COUNT = 13;
 
     public static IReadOnlyList<Card<DefaultCardDescription>> Default36Set { get; } =
         Enumerable.Range((int)FIRST_SUIT, SUIT_COUNT)
@@ -31,6 +31,5 @@ public static class CardSets
                         new Card<DefaultCardDescription>(
                             new((CardSuit)suit, (CardType)type))))
             .SelectMany(x => x)
-            .Concat(Default36Set)
             .ToList();
 }
