@@ -3,9 +3,11 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 17
 VisualStudioVersion = 17.8.34330.188
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "CardGame.Core", "CardGame.Core\CardGame.Core.csproj", "{E3EAD0E0-8071-47AE-9C38-D2AE34A307A5}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Core", "CardGame.Core\Core.csproj", "{E3EAD0E0-8071-47AE-9C38-D2AE34A307A5}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "CardGame.Core.Tests", "CardGame.Core.Tests\CardGame.Core.Tests.csproj", "{FB01352C-EBE9-4975-A4B3-447034FA7D23}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Core.Tests", "CardGame.Core.Tests\Core.Tests.csproj", "{FB01352C-EBE9-4975-A4B3-447034FA7D23}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Drunkard", "Drunkard\Drunkard.csproj", "{915A78A3-F1BE-4557-97E1-729A2406B5E5}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -21,6 +23,10 @@ Global
 		{FB01352C-EBE9-4975-A4B3-447034FA7D23}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{FB01352C-EBE9-4975-A4B3-447034FA7D23}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{FB01352C-EBE9-4975-A4B3-447034FA7D23}.Release|Any CPU.Build.0 = Release|Any CPU
+		{915A78A3-F1BE-4557-97E1-729A2406B5E5}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{915A78A3-F1BE-4557-97E1-729A2406B5E5}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{915A78A3-F1BE-4557-97E1-729A2406B5E5}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{915A78A3-F1BE-4557-97E1-729A2406B5E5}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

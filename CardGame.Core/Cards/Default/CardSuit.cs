@@ -1,4 +1,4 @@
-﻿namespace CardGame.Core.DefaultCard;
+﻿namespace Centuriin.CardGame.Core.Cards.Default;
 
 /// <summary>
 /// Масть карты.

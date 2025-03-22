@@ -1,4 +1,6 @@
-﻿namespace CardGame.Core.Events;
+﻿using Centuriin.CardGame.Core.Cards;
+
+namespace CardGame.Core.Events;
 
 public sealed class CardDroppingEvent<TCard> : IGameEvent
     where TCard : ICard

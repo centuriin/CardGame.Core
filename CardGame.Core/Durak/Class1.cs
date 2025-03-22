@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace CardGame.Core.Durak;
+namespace Centuriin.CardGame.Core.Durak;
 internal class Class1
 {
 }

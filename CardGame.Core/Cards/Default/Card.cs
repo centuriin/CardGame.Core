@@ -1,12 +1,11 @@
 ﻿using System.ComponentModel;
 
-namespace CardGame.Core.DefaultCard;
+namespace Centuriin.CardGame.Core.Cards.Default;
 
 /// <summary>
-/// Представляет описание обычных игральных карт от 
-/// <see cref="CardType.Two"> до <see cref="CardType.Ace"> четырех мастей <see cref="CardSuit">.
+/// Представляет обычную игральную карту.
 /// </summary>
-public class DefaultCardDescription : ICardDescription
+public class Card : ICard
 {
     /// <summary>
     /// Масть карты.
@@ -19,7 +18,7 @@ public class DefaultCardDescription : ICardDescription
     public CardType Type { get; }
 
     /// <summary>
-    /// Создает новый объект типа <see cref="DefaultCardDescription"/>.
+    /// Создает новый объект типа <see cref="Card"/>.
     /// </summary>
     /// <param name="suit">
     /// Масть карты.
@@ -30,7 +29,7 @@ public class DefaultCardDescription : ICardDescription
     /// <exception cref="InvalidEnumArgumentException">
     /// Если перечисления имели неверные значения.
     /// </exception>
-    public DefaultCardDescription(CardSuit suit, CardType type)
+    public Card(CardSuit suit, CardType type)
     {
         if (!Enum.IsDefined(suit))
         {
@@ -46,8 +45,8 @@ public class DefaultCardDescription : ICardDescription
     }
 
     /// <inheritdoc/>
-    public bool Equals(ICardDescription? other) => 
-        other is DefaultCardDescription description &&
-        description.Suit == Suit &&
-        description.Type == Type;
+    public bool Equals(ICard? other) =>
+        other is Card card
+        && Suit == card.Suit
+        && Type == card.Type;
 }

@@ -1,4 +1,6 @@
-﻿namespace CardGame.Core.State;
+﻿using Centuriin.CardGame.Core.Cards;
+
+namespace CardGame.Core.State;
 
 /// <summary>
 /// Состояние игры с индивидуальными колодами карт для каждого игрока.

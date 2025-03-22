@@ -1,5 +1,7 @@
 ﻿using System.Runtime.CompilerServices;
 
+using Centuriin.CardGame.Core.Cards;
+
 namespace CardGame.Core.State;
 
 /// <summary>
@@ -7,11 +9,14 @@ namespace CardGame.Core.State;
 /// </summary>
 public abstract class CardGameStateBase
 {
+    protected readonly Dictionary<Id<Player>, Player> _players = [];
     protected readonly Dictionary<Id<Player>, List<ICard>> _playerCards = [];
     protected readonly Dictionary<Id<Player>, List<ICard>> _desktopPlayerCards = [];
     protected readonly List<ICard> _desktopCards = [];
 
-    public int PlayersCount => _playerCards.Keys.Count;
+    public int PlayersCount => _players.Count;
+
+    public IReadOnlyDictionary<Id<Player>, Player> Players => _players;
 
     public GameState CurrentGameState { get; private set; } = GameState.None;
 

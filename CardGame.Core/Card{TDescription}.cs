@@ -1,4 +1,6 @@
-﻿namespace CardGame.Core;
+﻿using Centuriin.CardGame.Core.Cards;
+
+namespace CardGame.Core;
 
 public sealed class Card<TDescription> : ICard 
     where TDescription : ICardDescription

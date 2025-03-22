@@ -1,4 +1,6 @@
-﻿namespace CardGame.Core;
+﻿using Centuriin.CardGame.Core;
+
+namespace CardGame.Core;
 
 public sealed class Player
 {

@@ -1,4 +1,4 @@
-﻿namespace CardGame.Core.DefaultCard;
+﻿namespace Centuriin.CardGame.Core.Cards.Default;
 
 /// <summary>
 /// Тип карты.
@@ -6,47 +6,47 @@
 public enum CardType : byte
 {
     /// <summary>
-    /// 2.
+    /// Двойка.
     /// </summary>
     Two = 2,
 
     /// <summary>
-    /// 3.
+    /// Тройка.
     /// </summary>
     Three,
 
     /// <summary>
-    /// 4.
+    /// Четверка.
     /// </summary>
     Four,
 
     /// <summary>
-    /// 5.
+    /// Пятерка.
     /// </summary>
     Five,
 
     /// <summary>
-    /// 6.
+    /// Шестерка.
     /// </summary>
     Six,
 
     /// <summary>
-    /// 7.
+    /// Семерка.
     /// </summary>
     Seven,
 
     /// <summary>
-    /// 8.
+    /// Восьмерка.
     /// </summary>
     Eight,
 
     /// <summary>
-    /// 9.
+    /// Девятка.
     /// </summary>
     Nine,
 
     /// <summary>
-    /// 10.
+    /// Десятка.
     /// </summary>
     Ten,
 

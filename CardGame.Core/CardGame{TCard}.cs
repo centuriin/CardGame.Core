@@ -1,5 +1,7 @@
 ﻿using CardGame.Core.Events;
 
+using Centuriin.CardGame.Core.Cards;
+
 namespace CardGame.Core;
 
 public sealed class CardGame<TCard>

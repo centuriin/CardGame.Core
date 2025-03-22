@@ -1,6 +1,9 @@
-﻿using CardGame.Core.DefaultCard;
+﻿using CardGame.Core;
+using CardGame.Core.DefaultCard;
 
-namespace CardGame.Core;
+using Centuriin.CardGame.Core.Cards.Default;
+
+namespace Centuriin.CardGame.Core;
 
 public static class CardSets
 {

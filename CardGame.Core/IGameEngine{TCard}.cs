@@ -6,6 +6,8 @@ using System.Threading.Tasks;
 
 using CardGame.Core.Events;
 
+using Centuriin.CardGame.Core.Cards;
+
 namespace CardGame.Core;
 
 public interface IGameEngine<TCard>
