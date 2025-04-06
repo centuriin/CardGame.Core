@@ -1,10 +1,14 @@
-﻿using System.Diagnostics.CodeAnalysis;
+﻿using System.Collections;
+using System.Diagnostics.CodeAnalysis;
 
 using CardGame.Core.Events;
 
+using Centuriin.CardGame.Core;
+using Centuriin.CardGame.Core.Engine;
+
 namespace CardGame.Core.Engine;
 
-public sealed class PlayerTurnAutomat
+public sealed class PlayerTurnAutomat : IPlayerTurnAutomat
 {
     private const int MIN_TURN_COUNT = 1;
 
@@ -70,6 +74,9 @@ public sealed class PlayerTurnAutomat
 
         _eventsActions[typeof(T)] = action;
     }
+
+    public IEnumerator<IPlayer> GetEnumerator() => throw new NotImplementedException();
+    IEnumerator IEnumerable.GetEnumerator() => throw new NotImplementedException();
 
     public sealed class AutomatBuilder
     {
@@ -160,5 +167,16 @@ public sealed class PlayerTurnAutomat
             Automat = automat;
             Current = automat.CurrentNode;
         }
+    }
+
+    private struct PlayerEnumerator : IEnumerator<IPlayer>
+    {
+        public IPlayer Current => throw new NotImplementedException();
+
+        object IEnumerator.Current => throw new NotImplementedException();
+
+        public void Dispose() => throw new NotImplementedException();
+        public bool MoveNext() => throw new NotImplementedException();
+        public void Reset() => throw new NotImplementedException();
     }
 }
