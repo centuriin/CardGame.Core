@@ -1,5 +1,4 @@
 ﻿using System.Collections;
-using System.Diagnostics.CodeAnalysis;
 
 using CardGame.Core.Events;
 
@@ -10,173 +9,88 @@ namespace CardGame.Core.Engine;
 
 public sealed class PlayerTurnAutomat : IPlayerTurnAutomat
 {
-    private const int MIN_TURN_COUNT = 1;
-
-    private readonly Dictionary<Type, Action<AutomatContext>> _eventsActions = [];
-
-    public static AutomatBuilder Builder { get; } = new();
-
-    public int CurrentLoop { get; private set; } = 1;
-
-    public Id<Player> Current => CurrentNode.ValueRef.PlayerId;
-
-    private LinkedList<PlayerIdAndTurnCount> Players { get; } = new();
-
-    private LinkedListNode<PlayerIdAndTurnCount> CurrentNode { get; set; } = null!;
+    private Dictionary<Type, Func<Task>> Actions { get; } = [];
+    private LinkedList<IPlayer> Players { get; } = [];
+    private LinkedListNode<IPlayer>? Current { get; set; }
 
     private PlayerTurnAutomat() { }
 
-    public Id<Player> MoveNext()
+    public sealed class Builder : IPlayerTurnAutomatBuilder
     {
-        if (CurrentNode.Value.CurrentTurnCount > 1)
+        private const int MIN_PLAYERS_COUNT = 2;
+        
+        private PlayerTurnAutomat Automat { get; set; } = new();
+
+        public IPlayerTurnAutomat Build() => Automat;
+
+        public Builder Reset()
         {
-            CurrentNode.ValueRef.CurrentTurnCount--;
+            Automat = new();
 
-            return CurrentNode.Value.PlayerId;
-        }
-
-        CurrentNode.ValueRef.CurrentTurnCount = CurrentNode.ValueRef.InitialTurnCount;
-
-        if (CurrentNode == Players.Last)
-        {
-            CurrentNode = Players.First!;
-            CurrentLoop++;
-        }
-        else
-            CurrentNode = CurrentNode.Next!;
-
-        return CurrentNode.Value.PlayerId;
-    }
-
-    public Id<Player> MoveNext(IGameEvent gameEvent)
-    {
-        ArgumentNullException.ThrowIfNull(gameEvent);
-
-        if (_eventsActions.TryGetValue(gameEvent.GetType(), out var action))
-        {
-            action.Invoke(new(this));
-
-            return Current;
-        }
-        else
-            throw new InvalidOperationException("This game event can't support.");
-    }
-
-    public void Remove(Id<Player> id) => Players.Remove(new PlayerIdAndTurnCount(id));
-
-    private void Register<T>(Action<AutomatContext> action)
-        where T : IGameEvent
-    {
-        if (_eventsActions.ContainsKey(typeof(T)))
-        {
-            throw new InvalidOperationException("On this game event is already registered action.");
-        }
-
-        _eventsActions[typeof(T)] = action;
-    }
-
-    public IEnumerator<IPlayer> GetEnumerator() => throw new NotImplementedException();
-    IEnumerator IEnumerable.GetEnumerator() => throw new NotImplementedException();
-
-    public sealed class AutomatBuilder
-    {
-        private PlayerTurnAutomat _automat = new();
-
-        public AutomatBuilder StartWith(Id<Player> id, int turnCount = 1)
-        {
-            ArgumentOutOfRangeException.ThrowIfLessThan(turnCount, MIN_TURN_COUNT);
-
-            ThrowIfAlreadyExist(id);
-
-            _automat.CurrentNode = _automat.Players.AddFirst(new PlayerIdAndTurnCount(id, turnCount));
-            
             return this;
         }
 
-        public AutomatBuilder SetNext(Id<Player> id, int turnCount = 1)
+        public Builder AddPlayers(IReadOnlyCollection<IPlayer> players)
         {
-            ArgumentOutOfRangeException.ThrowIfLessThan(turnCount, MIN_TURN_COUNT);
+            ArgumentNullException.ThrowIfNull(players);
 
-            ThrowIfAlreadyExist(id);
-
-            _ = _automat.Players.AddLast(new PlayerIdAndTurnCount(id, turnCount));
-            
-            return this;
-        }
-
-        public AutomatBuilder AddReactionOn<T>(Action<AutomatContext> action)
-            where T : IGameEvent
-        {
-            ArgumentNullException.ThrowIfNull(action);
-
-            _automat.Register<T>(action);
-            
-            return this;
-        }
-
-        public PlayerTurnAutomat Build() => _automat;
-
-        public void Reset() => _automat = new();
-
-        private void ThrowIfAlreadyExist(Id<Player> id)
-        {
-            if (_automat.Players.Find(new(id)) is not null)
+            if (players.Count < MIN_PLAYERS_COUNT)
             {
-                throw new InvalidOperationException("Player is already added.");
+                throw new InvalidOperationException(
+                    $"Players count must be great or equal {MIN_PLAYERS_COUNT}.");
             }
-        }
-    }
 
-    public struct PlayerIdAndTurnCount
-    {
-        private int _currentTurnCount;
-
-        public Id<Player> PlayerId { get; }
-        public int InitialTurnCount { get; }
-        public int CurrentTurnCount
-        {
-            get => _currentTurnCount;
-            set
+            foreach (var p in players)
             {
-                ArgumentOutOfRangeException.ThrowIfLessThan(value, MIN_TURN_COUNT);
-
-                _currentTurnCount = value;
+                Automat.Players.AddLast(p);
             }
+
+            return this;
         }
 
-        internal PlayerIdAndTurnCount(Id<Player> id, int initialTurnCount = 1)
+        public Builder Register<TEvent>(Func<Task> action)
+            where TEvent : IGameEvent
         {
-            PlayerId = id;
-            InitialTurnCount = initialTurnCount;
-            _currentTurnCount = initialTurnCount;
+
+
+            return this;
         }
 
-        public override bool Equals([NotNullWhen(true)] object? obj) =>
-            obj is PlayerIdAndTurnCount p && PlayerId == p.PlayerId;
-
-        public override int GetHashCode() => PlayerId.GetHashCode();
-    }
-
-    public struct AutomatContext
-    {
-        public LinkedListNode<PlayerIdAndTurnCount> Current { get; }
-        public PlayerTurnAutomat Automat { get; }
-
-        internal AutomatContext(PlayerTurnAutomat automat)
+        public Task MoveToPlayer(IPlayer player)
         {
-            Automat = automat;
-            Current = automat.CurrentNode;
+            ArgumentNullException.ThrowIfNull(player);
+
+            Automat.Current = Automat.Players.Find(player)
+                ?? throw new InvalidOperationException("Player not found.");
+
+            return Task.CompletedTask;
+        }
+
+        public Task MoveToFirstPlayer()
+        {
+            Automat.Current = Automat.Players.First;
+            return Task.CompletedTask;
+        }
+
+        public Task MoveToLastPlayer()
+        {
+            Automat.Current = Automat.Players.Last;
+            return Task.CompletedTask;
         }
     }
 
-    private struct PlayerEnumerator : IEnumerator<IPlayer>
+    public IEnumerator<IPlayer> GetEnumerator()
     {
-        public IPlayer Current => throw new NotImplementedException();
+        Current = Players.First!;
 
-        object IEnumerator.Current => throw new NotImplementedException();
+        do
+        {
+            yield return Current.ValueRef;
 
-        public void Dispose() => throw new NotImplementedException();
-        public bool MoveNext() => throw new NotImplementedException();
-        public void Reset() => throw new NotImplementedException();
+            Current = Current.Next ?? Players.First;
+        }
+        while(Current is not null);
     }
+
+    IEnumerator IEnumerable.GetEnumerator() => GetEnumerator();
 }
