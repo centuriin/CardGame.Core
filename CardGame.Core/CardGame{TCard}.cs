@@ -1,5 +1,6 @@
 ﻿using CardGame.Core.Events;
 
+using Centuriin.CardGame.Core;
 using Centuriin.CardGame.Core.Cards;
 
 namespace CardGame.Core;

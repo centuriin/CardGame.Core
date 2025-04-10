@@ -1,16 +1,26 @@
-﻿using Centuriin.CardGame.Core;
+﻿using CardGame.Core.Events;
+
+using Centuriin.CardGame.Core;
 using Centuriin.CardGame.Core.Engine;
 
 namespace CardGame.Core.Engine;
 
 public interface IPlayerTurnAutomatBuilder
 {
-    public IPlayerTurnAutomatBuilder AddPlayers(IReadOnlyCollection<IPlayer> players);
     public IPlayerTurnAutomat Build();
-    public IPlayerTurnAutomatBuilder Register<TEvent>(Func<Task> action);
+
+    public IPlayerTurnAutomatBuilder UseDispatcher(IEventDispatcher<IGameEvent> dispatcher);
+
+    public IPlayerTurnAutomatBuilder Register<TEvent>(Func<TEvent, CancellationToken, Task> action)
+        where TEvent : IGameEvent;
+
+    public IPlayerTurnAutomatBuilder AddPlayers(IReadOnlyCollection<IPlayer> players);
+
     public IPlayerTurnAutomatBuilder Reset();
 
-    public Task MoveToFirstPlayer();
-    public Task MoveToLastPlayer();
-    public Task MoveToPlayer(IPlayer player);
+    public Task NextMoveFirstPlayer();
+
+    public Task NextMoveLastPlayer();
+
+    public Task NextMovePlayer(IPlayer player);
 }

@@ -1,6 +1,8 @@
-﻿namespace Centuriin.CardGame.Core.Engine;
+﻿using CardGame.Core.Engine;
 
-public interface IPlayerTurnAutomat : IEnumerable<IPlayer>
+namespace Centuriin.CardGame.Core.Engine;
+
+public interface IPlayerTurnAutomat : IEnumerable<IPlayer>, IDisposable
 {
-
+    public static abstract IPlayerTurnAutomatBuilder Builder { get; }
 }

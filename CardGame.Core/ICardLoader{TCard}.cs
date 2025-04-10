@@ -1,4 +1,6 @@
-﻿namespace Centuriin.CardGame.Core;
+﻿using Centuriin.CardGame.Core.Cards;
+
+namespace Centuriin.CardGame.Core;
 public interface ICardLoader<TCard>
     where TCard : ICard
 {

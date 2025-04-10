@@ -1,9 +1,6 @@
-﻿using CardGame.Core;
-using CardGame.Core.DefaultCard;
+﻿using Centuriin.CardGame.Core.Cards.Default;
 
-using Centuriin.CardGame.Core.Cards.Default;
-
-namespace Centuriin.CardGame.Core;
+namespace Centuriin.CardGame.Core.Cards;
 
 public static class CardSets
 {
@@ -16,23 +13,21 @@ public static class CardSets
     private const CardType FIRST_DEFAULT52_CARD = CardType.Two;
     private const int DEFAULT52_PACK_COUNT = 13;
 
-    public static IReadOnlyList<Card<DefaultCardDescription>> Default36Set { get; } =
+    public static IReadOnlyList<Card> Default36Set { get; } =
         Enumerable.Range((int)FIRST_SUIT, SUIT_COUNT)
             .Select(suit =>
                 Enumerable.Range((int)FIRST_DEFAULT36_CARD, DEFAULT36_PACK_COUNT)
                     .Select(type =>
-                        new Card<DefaultCardDescription>(
-                            new((CardSuit)suit, (CardType)type))))
+                        new Card((CardSuit)suit, (CardType)type)))
             .SelectMany(x => x)
             .ToList();
 
-    public static IReadOnlyList<Card<DefaultCardDescription>> Default52Set { get; } =
+    public static IReadOnlyList<Card> Default52Set { get; } =
         Enumerable.Range((int)FIRST_SUIT, SUIT_COUNT)
             .Select(suit =>
                 Enumerable.Range((int)FIRST_DEFAULT52_CARD, DEFAULT52_PACK_COUNT)
                     .Select(type =>
-                        new Card<DefaultCardDescription>(
-                            new((CardSuit)suit, (CardType)type))))
+                        new Card((CardSuit)suit, (CardType)type)))
             .SelectMany(x => x)
             .ToList();
 }
