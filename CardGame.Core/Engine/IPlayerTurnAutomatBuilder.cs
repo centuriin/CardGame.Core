@@ -15,7 +15,7 @@ public interface IPlayerTurnAutomatBuilder
         Func<TEvent, IPlayerTurnAutomat, CancellationToken, Task> action)
         where TEvent : IGameEvent;
 
-    public IPlayerTurnAutomatBuilder AddPlayers(IReadOnlyCollection<IPlayer> players);
+    public IPlayerTurnAutomatBuilder AddPlayers(IReadOnlyCollection<PlayerId> players);
 
     public IPlayerTurnAutomatBuilder Reset();
 }

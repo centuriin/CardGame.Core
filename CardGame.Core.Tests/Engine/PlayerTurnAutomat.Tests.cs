@@ -18,8 +18,8 @@ public sealed class PlayerTurnAutomatTests
     public void CanNotAddPlayersAfterBuild()
     {
         // Arrange
-        var player1 = new FakePlayer { Id = 1 };
-        var player2 = new FakePlayer { Id = 2 };
+        var player1 = new PlayerId(1);
+        var player2 = new PlayerId(2);
 
         var builder = new PlayerTurnAutomat
             .AutomatBuilder()
@@ -38,7 +38,7 @@ public sealed class PlayerTurnAutomatTests
     public void CanNotBuildWithOnePlayer()
     {
         // Arrange
-        var player1 = new FakePlayer { Id = 1 };
+        var player1 = new PlayerId(1);
 
         var builder = new PlayerTurnAutomat
             .AutomatBuilder()
@@ -55,8 +55,8 @@ public sealed class PlayerTurnAutomatTests
     public void CanDistinctPlayers()
     {
         // Arrange
-        var player1 = new FakePlayer { Id = 1 };
-        var player2 = new FakePlayer { Id = 2 };
+        var player1 = new PlayerId(1);
+        var player2 = new PlayerId(2);
 
         var automat = new PlayerTurnAutomat
             .AutomatBuilder()
@@ -75,8 +75,8 @@ public sealed class PlayerTurnAutomatTests
     public void CanNotUseDispatcherAfterBuild()
     {
         // Arrange
-        var player1 = new FakePlayer { Id = 1 };
-        var player2 = new FakePlayer { Id = 2 };
+        var player1 = new PlayerId(1);
+        var player2 = new PlayerId(2);
         var builder = new PlayerTurnAutomat.AutomatBuilder();
 
         _ = builder.AddPlayers([player1, player2]).Build();
@@ -93,8 +93,8 @@ public sealed class PlayerTurnAutomatTests
     public void CanNotRegisterWithoutDispatcher()
     {
         // Arrange
-        var player1 = new FakePlayer { Id = 1 };
-        var player2 = new FakePlayer { Id = 2 };
+        var player1 = new PlayerId(1);
+        var player2 = new PlayerId(2);
         var builder = new PlayerTurnAutomat.AutomatBuilder();
 
         _ = builder.AddPlayers([player1, player2]).Build();
@@ -111,8 +111,8 @@ public sealed class PlayerTurnAutomatTests
     public void CanNotRegisterAfterBuild()
     {
         // Arrange
-        var player1 = new FakePlayer { Id = 1 };
-        var player2 = new FakePlayer { Id = 2 };
+        var player1 = new PlayerId(1);
+        var player2 = new PlayerId(2);
         var builder = new PlayerTurnAutomat.AutomatBuilder();
 
         _ = builder.AddPlayers([player1, player2])
@@ -131,8 +131,8 @@ public sealed class PlayerTurnAutomatTests
     public void PlayerTurnAfterBuildShouldBeNull()
     {
         // Arrange
-        var player1 = new FakePlayer { Id = 1 };
-        var player2 = new FakePlayer { Id = 2 };
+        var player1 = new PlayerId(1);
+        var player2 = new PlayerId(2);
 
         var builder = new PlayerTurnAutomat.AutomatBuilder();
 
@@ -149,8 +149,8 @@ public sealed class PlayerTurnAutomatTests
     public void CanMoveNext()
     {
         // Arrange
-        var player1 = new FakePlayer { Id = 1 };
-        var player2 = new FakePlayer { Id = 2 };
+        var player1 = new PlayerId(1);
+        var player2 = new PlayerId(2);
 
         var builder = new PlayerTurnAutomat.AutomatBuilder();
 
@@ -169,8 +169,8 @@ public sealed class PlayerTurnAutomatTests
     public void CanBuildCyclePlayerTurns()
     {
         // Arrange
-        var player1 = new FakePlayer { Id = 1 };
-        var player2 = new FakePlayer { Id = 2 };
+        var player1 = new PlayerId(1);
+        var player2 = new PlayerId(2);
 
         var builder = new PlayerTurnAutomat.AutomatBuilder();
 
@@ -198,9 +198,9 @@ public sealed class PlayerTurnAutomatTests
                 x.Register(It.IsAny<Func<FakeEvent, CancellationToken, Task>>()))
             .Callback((Func<FakeEvent, CancellationToken, Task> act) => func = act);
 
-        var player1 = new FakePlayer { Id = 1 };
-        var player2 = new FakePlayer { Id = 2 };
-        var player3 = new FakePlayer { Id = 3 };
+        var player1 = new PlayerId(1);
+        var player2 = new PlayerId(2);
+        var player3 = new PlayerId(3);
 
         var builder = new PlayerTurnAutomat.AutomatBuilder();
 
@@ -214,16 +214,6 @@ public sealed class PlayerTurnAutomatTests
         func.Invoke(null!, CancellationToken.None);
 
         automat.PlayerTurn.Should().Be(player3);
-    }
-
-    public sealed class FakePlayer : IPlayer
-    {
-        public int Id { get; set; }
-
-        public override bool Equals(object? obj) => Equals(obj as FakePlayer);
-        public bool Equals(IPlayer? other) => other is FakePlayer p && Id == p.Id;
-
-        public override int GetHashCode() => Id.GetHashCode();
     }
 
     public sealed class FakeEvent : IGameEvent

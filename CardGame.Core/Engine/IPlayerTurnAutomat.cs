@@ -1,8 +1,10 @@
-﻿namespace Centuriin.CardGame.Core.Engine;
+﻿using CardGame.Core;
+
+namespace Centuriin.CardGame.Core.Engine;
 
 public interface IPlayerTurnAutomat
 {
-    public IPlayer? PlayerTurn { get; }
+    public PlayerId? PlayerTurn { get; }
 
     public Task MoveNext();
 
@@ -10,5 +12,5 @@ public interface IPlayerTurnAutomat
 
     public Task MoveToLastPlayer();
 
-    public Task MoveToPlayer(IPlayer player);
+    public Task MoveToPlayer(PlayerId player);
 }

@@ -7,20 +7,20 @@ namespace CardGame.Core.Engine;
 
 public sealed class PlayerTurnAutomat : IPlayerTurnAutomat
 {
-    private IEnumerator<IPlayer> _enumerator;
+    private IEnumerator<PlayerId> _enumerator;
 
     private IEventDispatcher<IGameEvent>? Dispatcher { get; set; }
-    private LinkedList<IPlayer> Players { get; } = [];
-    private LinkedListNode<IPlayer>? Current { get; set; }
+    private LinkedList<PlayerId> Players { get; } = [];
+    private LinkedListNode<PlayerId>? Current { get; set; }
 
-    public IPlayer? PlayerTurn => Current?.ValueRef;
+    public PlayerId? PlayerTurn => Current?.ValueRef;
 
     private PlayerTurnAutomat()
     {
         _enumerator = GetEnumerator();
     }
 
-    private IEnumerator<IPlayer> GetEnumerator()
+    private IEnumerator<PlayerId> GetEnumerator()
     {
         Current = Players.First!;
 
@@ -41,7 +41,7 @@ public sealed class PlayerTurnAutomat : IPlayerTurnAutomat
     }
 
     /// <inheritdoc/>
-    public Task MoveToPlayer(IPlayer player)
+    public Task MoveToPlayer(PlayerId player)
     {
         ArgumentNullException.ThrowIfNull(player);
 
@@ -68,9 +68,9 @@ public sealed class PlayerTurnAutomat : IPlayerTurnAutomat
     public sealed class AutomatBuilder : IPlayerTurnAutomatBuilder
     {
         private const int MIN_PLAYERS_COUNT = 2;
-        private bool _isBuilt = false;
+        private bool _isBuilt;
 
-        private readonly HashSet<IPlayer> _players = new();
+        private readonly HashSet<PlayerId> _players = new();
 
         private PlayerTurnAutomat Automat { get; } = new();
 
@@ -97,7 +97,7 @@ public sealed class PlayerTurnAutomat : IPlayerTurnAutomat
 
         public IPlayerTurnAutomatBuilder Reset() => new AutomatBuilder();
 
-        public IPlayerTurnAutomatBuilder AddPlayers(IReadOnlyCollection<IPlayer> players)
+        public IPlayerTurnAutomatBuilder AddPlayers(IReadOnlyCollection<PlayerId> players)
         {
             ArgumentNullException.ThrowIfNull(players);
 
