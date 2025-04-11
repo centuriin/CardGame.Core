@@ -1,6 +1,4 @@
-﻿using System.Collections;
-
-using CardGame.Core.Events;
+﻿using CardGame.Core.Events;
 
 using Centuriin.CardGame.Core;
 using Centuriin.CardGame.Core.Engine;
@@ -9,21 +7,21 @@ namespace CardGame.Core.Engine;
 
 public sealed class PlayerTurnAutomat : IPlayerTurnAutomat
 {
-    private List<Action> UnregisterActions { get; } = [];
+    private IEnumerator<IPlayer> _enumerator;
+
     private IEventDispatcher<IGameEvent>? Dispatcher { get; set; }
     private LinkedList<IPlayer> Players { get; } = [];
     private LinkedListNode<IPlayer>? Current { get; set; }
 
-    private bool _isDisposed = false;
+    public IPlayer? PlayerTurn => Current?.ValueRef;
 
-    public static IPlayerTurnAutomatBuilder Builder { get; } = new AutomatBuilder();
-
-    private PlayerTurnAutomat() { }
-
-    public IEnumerator<IPlayer> GetEnumerator()
+    private PlayerTurnAutomat()
     {
-        ObjectDisposedException.ThrowIf(_isDisposed, this);
+        _enumerator = GetEnumerator();
+    }
 
+    private IEnumerator<IPlayer> GetEnumerator()
+    {
         Current = Players.First!;
 
         do
@@ -32,25 +30,39 @@ public sealed class PlayerTurnAutomat : IPlayerTurnAutomat
 
             Current = Current.Next ?? Players.First;
         }
-        while(Current is not null);
+        while (Current is not null);
     }
 
-    IEnumerator IEnumerable.GetEnumerator() => GetEnumerator();
+    /// <inheritdoc/>
+    public Task MoveNext()
+    {
+        _ = _enumerator.MoveNext();
+        return Task.CompletedTask;
+    }
 
     /// <inheritdoc/>
-    public void Dispose()
+    public Task MoveToPlayer(IPlayer player)
     {
-        if (Dispatcher is not null)
-        {
-            foreach (var action in UnregisterActions)
-            {
-                action.Invoke();
-            }
+        ArgumentNullException.ThrowIfNull(player);
 
-            UnregisterActions.Clear();
-        }
+        Current = Players.Find(player)
+            ?? throw new InvalidOperationException("Player not found.");
 
-        _isDisposed = true;
+        return Task.CompletedTask;
+    }
+
+    /// <inheritdoc/>
+    public Task MoveToFirstPlayer()
+    {
+        Current = Players.First;
+        return Task.CompletedTask;
+    }
+
+    /// <inheritdoc/>
+    public Task MoveToLastPlayer()
+    {
+        Current = Players.Last;
+        return Task.CompletedTask;
     }
 
     public sealed class AutomatBuilder : IPlayerTurnAutomatBuilder
@@ -58,7 +70,9 @@ public sealed class PlayerTurnAutomat : IPlayerTurnAutomat
         private const int MIN_PLAYERS_COUNT = 2;
         private bool _isBuilt = false;
 
-        private PlayerTurnAutomat Automat { get; set; } = new();
+        private readonly HashSet<IPlayer> _players = new();
+
+        private PlayerTurnAutomat Automat { get; } = new();
 
         private void ThrowIfBuilt()
         {
@@ -71,6 +85,12 @@ public sealed class PlayerTurnAutomat : IPlayerTurnAutomat
 
         public IPlayerTurnAutomat Build()
         {
+            if (Automat.Players.Count < MIN_PLAYERS_COUNT)
+            {
+                throw new InvalidOperationException(
+                    $"Players count must be great or equal {MIN_PLAYERS_COUNT}.");
+            }
+
             _isBuilt = true;
             return Automat;
         }
@@ -83,15 +103,12 @@ public sealed class PlayerTurnAutomat : IPlayerTurnAutomat
 
             ThrowIfBuilt();
 
-            if (players.Count < MIN_PLAYERS_COUNT)
-            {
-                throw new InvalidOperationException(
-                    $"Players count must be great or equal {MIN_PLAYERS_COUNT}.");
-            }
-
             foreach (var p in players)
             {
-                Automat.Players.AddLast(p);
+                if (_players.Add(p))
+                {
+                    Automat.Players.AddLast(p);
+                }
             }
 
             return this;
@@ -108,7 +125,8 @@ public sealed class PlayerTurnAutomat : IPlayerTurnAutomat
             return this;
         }
 
-        public IPlayerTurnAutomatBuilder Register<TEvent>(Func<TEvent, CancellationToken, Task> action)
+        public IPlayerTurnAutomatBuilder Register<TEvent>(
+            Func<TEvent, IPlayerTurnAutomat, CancellationToken, Task> action)
             where TEvent : IGameEvent
         {
             ArgumentNullException.ThrowIfNull(action);
@@ -120,33 +138,10 @@ public sealed class PlayerTurnAutomat : IPlayerTurnAutomat
                 throw new InvalidOperationException("Dispatcher must be settled.");
             }
 
-            Automat.Dispatcher.Register(action);
-
-            Automat.UnregisterActions.Add(() => Automat.Dispatcher.Unregister(action));
+            Automat.Dispatcher.Register<TEvent>((e, t) => 
+                action.Invoke(e, Automat, t));
 
             return this;
-        }
-
-        public Task NextMovePlayer(IPlayer player)
-        {
-            ArgumentNullException.ThrowIfNull(player);
-
-            Automat.Current = Automat.Players.Find(player)
-                ?? throw new InvalidOperationException("Player not found.");
-
-            return Task.CompletedTask;
-        }
-
-        public Task NextMoveFirstPlayer()
-        {
-            Automat.Current = Automat.Players.First;
-            return Task.CompletedTask;
-        }
-
-        public Task NextMoveLastPlayer()
-        {
-            Automat.Current = Automat.Players.Last;
-            return Task.CompletedTask;
         }
     }
 }
