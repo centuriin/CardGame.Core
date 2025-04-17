@@ -1,6 +1,4 @@
-﻿using CardGame.Core.Events;
-
-using Centuriin.CardGame.Core;
+﻿using Centuriin.CardGame.Core;
 using Centuriin.CardGame.Core.Engine;
 
 namespace CardGame.Core.Engine;
@@ -9,7 +7,6 @@ public sealed class PlayerTurnAutomat : IPlayerTurnAutomat
 {
     private IEnumerator<PlayerId> _enumerator;
 
-    private IEventDispatcher<IGameEvent>? Dispatcher { get; set; }
     private LinkedList<PlayerId> Players { get; } = [];
     private LinkedListNode<PlayerId>? Current { get; set; }
 
@@ -43,8 +40,6 @@ public sealed class PlayerTurnAutomat : IPlayerTurnAutomat
     /// <inheritdoc/>
     public Task MoveToPlayer(PlayerId player)
     {
-        ArgumentNullException.ThrowIfNull(player);
-
         Current = Players.Find(player)
             ?? throw new InvalidOperationException("Player not found.");
 
@@ -110,36 +105,6 @@ public sealed class PlayerTurnAutomat : IPlayerTurnAutomat
                     Automat.Players.AddLast(p);
                 }
             }
-
-            return this;
-        }
-
-        public IPlayerTurnAutomatBuilder UseDispatcher(IEventDispatcher<IGameEvent> dispatcher)
-        {
-            ArgumentNullException.ThrowIfNull(dispatcher);
-
-            ThrowIfBuilt();
-
-            Automat.Dispatcher = dispatcher;
-
-            return this;
-        }
-
-        public IPlayerTurnAutomatBuilder Register<TEvent>(
-            Func<TEvent, IPlayerTurnAutomat, CancellationToken, Task> action)
-            where TEvent : IGameEvent
-        {
-            ArgumentNullException.ThrowIfNull(action);
-
-            ThrowIfBuilt();
-
-            if (Automat.Dispatcher is null)
-            {
-                throw new InvalidOperationException("Dispatcher must be settled.");
-            }
-
-            Automat.Dispatcher.Register<TEvent>((e, t) => 
-                action.Invoke(e, Automat, t));
 
             return this;
         }
