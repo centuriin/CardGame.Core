@@ -1,2 +1,2 @@
 ﻿namespace Centuriin.CardGame.Core;
-public record struct PlayerId(long Id);
+public record struct PlayerId(long Value);

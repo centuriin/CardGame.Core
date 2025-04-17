@@ -1,11 +1,11 @@
 ﻿namespace CardGame.Core.State;
 
 /// <summary>
-/// Состояния игры.
+/// Статус игры.
 /// </summary>
-public enum GameState
+public enum GameStatus
 {
-    None,
+    Requested,
     Started,
     Ended
 }

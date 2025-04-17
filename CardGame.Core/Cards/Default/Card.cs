@@ -5,7 +5,7 @@ namespace Centuriin.CardGame.Core.Cards.Default;
 /// <summary>
 /// Представляет обычную игральную карту.
 /// </summary>
-public class Card : ICard
+public sealed class Card : ICard
 {
     /// <summary>
     /// Масть карты.

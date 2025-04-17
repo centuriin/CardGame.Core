@@ -7,4 +7,8 @@
 	<RootNamespace>Centuriin.CardGame.Drunkard</RootNamespace>
   </PropertyGroup>
 
+  <ItemGroup>
+    <ProjectReference Include="..\CardGame.Core\Core.csproj" />
+  </ItemGroup>
+
 </Project>

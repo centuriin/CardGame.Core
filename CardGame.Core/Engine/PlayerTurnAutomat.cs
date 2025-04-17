@@ -31,14 +31,14 @@ public sealed class PlayerTurnAutomat : IPlayerTurnAutomat
     }
 
     /// <inheritdoc/>
-    public Task MoveNext()
+    public Task MoveNextAsync(CancellationToken token)
     {
         _ = _enumerator.MoveNext();
         return Task.CompletedTask;
     }
 
     /// <inheritdoc/>
-    public Task MoveToPlayer(PlayerId player)
+    public Task MoveToPlayerAsync(PlayerId player, CancellationToken token)
     {
         Current = Players.Find(player)
             ?? throw new InvalidOperationException("Player not found.");
@@ -47,14 +47,14 @@ public sealed class PlayerTurnAutomat : IPlayerTurnAutomat
     }
 
     /// <inheritdoc/>
-    public Task MoveToFirstPlayer()
+    public Task MoveToFirstPlayerAsync(CancellationToken token)
     {
         Current = Players.First;
         return Task.CompletedTask;
     }
 
     /// <inheritdoc/>
-    public Task MoveToLastPlayer()
+    public Task MoveToLastPlayerAsync(CancellationToken token)
     {
         Current = Players.Last;
         return Task.CompletedTask;
