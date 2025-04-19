@@ -1,6 +1,7 @@
-﻿namespace Centuriin.CardGame.Core.Engine;
+﻿namespace Centuriin.CardGame.Core.Engine.Turn;
 
-public interface IPlayerTurnAutomat
+public interface IPlayerTurnAutomat<TMarker>
+    where TMarker : IGameMarker
 {
     public PlayerId? PlayerTurn { get; }
 

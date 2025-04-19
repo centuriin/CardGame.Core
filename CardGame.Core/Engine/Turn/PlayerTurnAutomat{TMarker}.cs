@@ -1,9 +1,7 @@
-﻿using Centuriin.CardGame.Core;
-using Centuriin.CardGame.Core.Engine;
+﻿namespace Centuriin.CardGame.Core.Engine.Turn;
 
-namespace CardGame.Core.Engine;
-
-public sealed class PlayerTurnAutomat : IPlayerTurnAutomat
+public sealed class PlayerTurnAutomat<TMarker> : IPlayerTurnAutomat<TMarker>
+    where TMarker : IGameMarker
 {
     private IEnumerator<PlayerId> _enumerator;
 
@@ -60,51 +58,43 @@ public sealed class PlayerTurnAutomat : IPlayerTurnAutomat
         return Task.CompletedTask;
     }
 
-    public sealed class AutomatBuilder : IPlayerTurnAutomatBuilder
+    public sealed class AutomatBuilder : IPlayerTurnAutomatBuilder<TMarker>
     {
         private const int MIN_PLAYERS_COUNT = 2;
         private bool _isBuilt;
 
         private readonly HashSet<PlayerId> _players = new();
 
-        private PlayerTurnAutomat Automat { get; } = new();
+        private PlayerTurnAutomat<TMarker> Automat { get; } = new();
 
         private void ThrowIfBuilt()
         {
             if (_isBuilt)
-            {
                 throw new InvalidOperationException(
                     "Automat is already built, use 'Reset()'.");
-            }
         }
 
-        public IPlayerTurnAutomat Build()
+        public IPlayerTurnAutomat<TMarker> Build()
         {
             if (Automat.Players.Count < MIN_PLAYERS_COUNT)
-            {
                 throw new InvalidOperationException(
                     $"Players count must be great or equal {MIN_PLAYERS_COUNT}.");
-            }
 
             _isBuilt = true;
             return Automat;
         }
 
-        public IPlayerTurnAutomatBuilder Reset() => new AutomatBuilder();
+        public IPlayerTurnAutomatBuilder<TMarker> Reset() => new AutomatBuilder();
 
-        public IPlayerTurnAutomatBuilder AddPlayers(IReadOnlyCollection<PlayerId> players)
+        public IPlayerTurnAutomatBuilder<TMarker> AddPlayers(IReadOnlyCollection<PlayerId> players)
         {
             ArgumentNullException.ThrowIfNull(players);
 
             ThrowIfBuilt();
 
             foreach (var p in players)
-            {
                 if (_players.Add(p))
-                {
                     Automat.Players.AddLast(p);
-                }
-            }
 
             return this;
         }

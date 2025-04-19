@@ -1,4 +1,5 @@
-﻿using CardGame.Core.Engine;
+﻿using Centuriin.CardGame.Core.Engine;
+using Centuriin.CardGame.Core.Engine.Turn;
 
 using FluentAssertions;
 
@@ -15,7 +16,7 @@ public sealed class PlayerTurnAutomatTests
         var player1 = new PlayerId(1);
         var player2 = new PlayerId(2);
 
-        var builder = new PlayerTurnAutomat
+        var builder = new PlayerTurnAutomat<FakeMarker>
             .AutomatBuilder()
             .AddPlayers([player1, player2]);
 
@@ -34,7 +35,7 @@ public sealed class PlayerTurnAutomatTests
         // Arrange
         var player1 = new PlayerId(1);
 
-        var builder = new PlayerTurnAutomat
+        var builder = new PlayerTurnAutomat<FakeMarker>
             .AutomatBuilder()
             .AddPlayers([player1]);
 
@@ -46,20 +47,20 @@ public sealed class PlayerTurnAutomatTests
     }
 
     [Fact]
-    public void CanDistinctPlayers()
+    public async Task CanDistinctPlayersAsync()
     {
         // Arrange
         var player1 = new PlayerId(1);
         var player2 = new PlayerId(2);
 
-        var automat = new PlayerTurnAutomat
+        var automat = new PlayerTurnAutomat<FakeMarker>
             .AutomatBuilder()
             .AddPlayers([player1, player1, player2])
             .Build();
 
         // Act
-        automat.MoveNext(); //p1
-        automat.MoveNext(); //p2
+        await automat.MoveNextAsync(CancellationToken.None); //p1
+        await automat.MoveNextAsync(CancellationToken.None); //p2
 
         // Assert
         automat.PlayerTurn.Should().BeEquivalentTo(player2);
@@ -72,7 +73,7 @@ public sealed class PlayerTurnAutomatTests
         var player1 = new PlayerId(1);
         var player2 = new PlayerId(2);
 
-        var builder = new PlayerTurnAutomat.AutomatBuilder();
+        var builder = new PlayerTurnAutomat<FakeMarker>.AutomatBuilder();
 
         // Act
         var automat = builder
@@ -84,44 +85,46 @@ public sealed class PlayerTurnAutomatTests
     }
 
     [Fact]
-    public void CanMoveNext()
+    public async Task CanMoveNextAsync()
     {
         // Arrange
         var player1 = new PlayerId(1);
         var player2 = new PlayerId(2);
 
-        var builder = new PlayerTurnAutomat.AutomatBuilder();
+        var builder = new PlayerTurnAutomat<FakeMarker>.AutomatBuilder();
 
         // Act
         var automat = builder
             .AddPlayers([player1, player2])
             .Build();
 
-        automat.MoveNext();
+        await automat.MoveNextAsync(CancellationToken.None);
 
         // Assert
         automat.PlayerTurn.Should().BeEquivalentTo(player1);
     }
 
     [Fact]
-    public void CanBuildCyclePlayerTurns()
+    public async Task CanBuildCyclePlayerTurnsAsync()
     {
         // Arrange
         var player1 = new PlayerId(1);
         var player2 = new PlayerId(2);
 
-        var builder = new PlayerTurnAutomat.AutomatBuilder();
+        var builder = new PlayerTurnAutomat<FakeMarker>.AutomatBuilder();
 
         // Act
         var automat = builder
             .AddPlayers([player1, player2])
             .Build();
 
-        automat.MoveNext(); //p1
-        automat.MoveNext(); //p2
-        automat.MoveNext(); //p1
+        await automat.MoveNextAsync(CancellationToken.None); //p1
+        await automat.MoveNextAsync(CancellationToken.None); //p2
+        await automat.MoveNextAsync(CancellationToken.None); //p1
 
         // Assert
         automat.PlayerTurn.Should().BeEquivalentTo(player1);
     }
+
+    public sealed class FakeMarker : IGameMarker;
 }

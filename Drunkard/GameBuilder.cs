@@ -13,11 +13,11 @@ namespace Centuriin.CardGame.Drunkard;
 public sealed class GameBuilder : IGameBuilder
 {
     private readonly IEventDispatcher<IGameEvent> _dispatcher;
-    private readonly IGameEngine _engine;
+    private readonly IGameInstance _engine;
 
     public GameBuilder(
         IEventDispatcher<IGameEvent> dispatcher,
-        IGameEngine engine)
+        IGameInstance engine)
     {
         ArgumentNullException.ThrowIfNull(dispatcher);
         _dispatcher = dispatcher;
@@ -26,7 +26,7 @@ public sealed class GameBuilder : IGameBuilder
         _engine = engine;
     }
 
-    public Task BuildAsync(CancellationToken cancellationToken)
+    public Task BuildAsync(CancellationToken token)
     {
         _dispatcher.Register<PlayerMoveEnded>(OnPlayerMoveEndedAsync);
 
