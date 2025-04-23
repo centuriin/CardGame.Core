@@ -10,6 +10,7 @@ using Centuriin.CardGame.Core.Engine;
 using Centuriin.CardGame.Core.Events;
 
 namespace Centuriin.CardGame.Drunkard;
+
 public sealed class GameBuilder : IGameBuilder
 {
     private readonly IEventDispatcher<IGameEvent> _dispatcher;
