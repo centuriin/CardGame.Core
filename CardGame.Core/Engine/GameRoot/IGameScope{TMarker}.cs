@@ -1,4 +1,4 @@
-﻿namespace Centuriin.CardGame.Core.Engine;
+﻿namespace Centuriin.CardGame.Core.Engine.GameRoot;
 
 public interface IGameScope<TMarker> : IDisposable
     where TMarker : IGameMarker

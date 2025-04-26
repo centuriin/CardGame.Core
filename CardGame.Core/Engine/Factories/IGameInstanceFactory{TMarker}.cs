@@ -1,4 +1,6 @@
-﻿namespace Centuriin.CardGame.Core.Engine.Factories;
+﻿using Centuriin.CardGame.Core.Engine.GameRoot;
+
+namespace Centuriin.CardGame.Core.Engine.Factories;
 
 public interface IGameInstanceFactory<TMarker>
     where TMarker : IGameMarker

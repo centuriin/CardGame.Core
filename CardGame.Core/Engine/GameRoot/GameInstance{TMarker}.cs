@@ -4,7 +4,7 @@ using CardGame.Core.Events;
 using Centuriin.CardGame.Core.Events;
 using Centuriin.CardGame.Core.State;
 
-namespace Centuriin.CardGame.Core.Engine;
+namespace Centuriin.CardGame.Core.Engine.GameRoot;
 
 public sealed class GameInstance<TMarker> : IGameInstance<TMarker>
     where TMarker : IGameMarker
@@ -33,7 +33,7 @@ public sealed class GameInstance<TMarker> : IGameInstance<TMarker>
     {
         token.ThrowIfCancellationRequested();
 
-        await Dispatcher.PublishAsync(new GameStarted(_gameId), token);
+        await Dispatcher.PublishAsync(new GameStartedEvent(_gameId), token);
     }
 
     public async Task DerailGameAsync(DerailedReason reason, CancellationToken token)
@@ -42,13 +42,13 @@ public sealed class GameInstance<TMarker> : IGameInstance<TMarker>
 
         token.ThrowIfCancellationRequested();
 
-        await Dispatcher.PublishAsync(new GameDerailed(_gameId, reason), token);
+        await Dispatcher.PublishAsync(new GameDerailedEvent(_gameId, reason), token);
     }
 
     public async Task StopGameAsync(CancellationToken token)
     {
         token.ThrowIfCancellationRequested();
 
-        await Dispatcher.PublishAsync(new GameStopped(_gameId), token);
+        await Dispatcher.PublishAsync(new GameStoppedEvent(_gameId), token);
     }
 }

@@ -1,6 +1,6 @@
 ﻿using Microsoft.Extensions.DependencyInjection;
 
-namespace Centuriin.CardGame.Core.Engine;
+namespace Centuriin.CardGame.Core.Engine.GameRoot;
 
 internal sealed class GameScope<TMarker> : IGameScope<TMarker>
     where TMarker : IGameMarker

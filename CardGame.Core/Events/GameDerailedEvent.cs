@@ -3,13 +3,13 @@ using CardGame.Core.Events;
 
 namespace Centuriin.CardGame.Core.Events;
 
-public sealed class GameDerailed : IGameEvent
+public sealed class GameDerailedEvent : IGameEvent
 {
     public GameId GameId { get; }
 
     public DerailedReason Reason { get; }
 
-    public GameDerailed(GameId gameId, DerailedReason reason)
+    public GameDerailedEvent(GameId gameId, DerailedReason reason)
     {
         GameId = gameId;
 

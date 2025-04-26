@@ -10,7 +10,7 @@ public sealed class CardHolder : ICardHolder
 
     private Dictionary<CardHolderSpaceId, List<ICard>> CardSpaces { get; } = [];
 
-    public Task AddToSharedSpace(IEnumerable<ICard> cards, CancellationToken token)
+    public Task AddToSharedSpaceAsync(IEnumerable<ICard> cards, CancellationToken token)
     {
         ArgumentNullException.ThrowIfNull(cards);
 
@@ -19,7 +19,7 @@ public sealed class CardHolder : ICardHolder
         return Task.CompletedTask;
     }
 
-    public Task RemoveFromSharedSpace(IEnumerable<ICard> cards, CancellationToken token)
+    public Task RemoveFromSharedSpaceAsync(IEnumerable<ICard> cards, CancellationToken token)
     {
         ArgumentNullException.ThrowIfNull(cards);
 
@@ -31,10 +31,10 @@ public sealed class CardHolder : ICardHolder
         return Task.CompletedTask;
     }
 
-    public Task<CardHolderSpaceId> CreateNewCardSpace(CancellationToken token) =>
+    public Task<CardHolderSpaceId> CreateNewCardSpaceAsync(CancellationToken token) =>
         Task.FromResult(new CardHolderSpaceId(CardSpaces.Count + 1));
 
-    public Task AddToSpace(CardHolderSpaceId spaceId, IEnumerable<ICard> cards, CancellationToken token)
+    public Task AddToSpaceAsync(CardHolderSpaceId spaceId, IEnumerable<ICard> cards, CancellationToken token)
     {
         ArgumentNullException.ThrowIfNull(cards);
 
@@ -48,7 +48,7 @@ public sealed class CardHolder : ICardHolder
         return Task.CompletedTask;
     }
 
-    public Task AddToPlayer(PlayerId playerId, IEnumerable<ICard> cards, CancellationToken token)
+    public Task AddToPlayerAsync(PlayerId playerId, IEnumerable<ICard> cards, CancellationToken token)
     {
         ArgumentNullException.ThrowIfNull(cards);
 
@@ -64,7 +64,7 @@ public sealed class CardHolder : ICardHolder
         return Task.CompletedTask;
     }
 
-    public Task RemoveFromPlayer(PlayerId playerId, IEnumerable<ICard> cards, CancellationToken token)
+    public Task RemoveFromPlayerAsync(PlayerId playerId, IEnumerable<ICard> cards, CancellationToken token)
     {
         ArgumentNullException.ThrowIfNull(cards);
 

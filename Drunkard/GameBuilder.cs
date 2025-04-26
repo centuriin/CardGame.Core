@@ -29,11 +29,11 @@ public sealed class GameBuilder : IGameBuilder
 
     public Task BuildAsync(CancellationToken token)
     {
-        _dispatcher.Register<PlayerMoveEnded>(OnPlayerMoveEndedAsync);
+        _dispatcher.Register<PlayerMoveEndedEvent>(OnPlayerMoveEndedAsync);
 
         return Task.CompletedTask;
     }
 
-    private async Task OnPlayerMoveEndedAsync(PlayerMoveEnded moveEnded, CancellationToken token) => 
+    private async Task OnPlayerMoveEndedAsync(PlayerMoveEndedEvent moveEnded, CancellationToken token) => 
         await _engine.State.TurnAutomat.MoveNextAsync(token);
 }

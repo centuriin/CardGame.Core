@@ -3,4 +3,4 @@ using CardGame.Core.Events;
 
 namespace Centuriin.CardGame.Core.Events;
 
-public sealed record class GameStopped(GameId GameId) : IGameEvent;
+public sealed record class GameStoppedEvent(GameId GameId) : IGameEvent;

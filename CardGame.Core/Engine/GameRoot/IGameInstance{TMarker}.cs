@@ -3,7 +3,7 @@
 using Centuriin.CardGame.Core.Events;
 using Centuriin.CardGame.Core.State;
 
-namespace Centuriin.CardGame.Core.Engine;
+namespace Centuriin.CardGame.Core.Engine.GameRoot;
 
 public interface IGameInstance<TMarker>
     where TMarker : IGameMarker

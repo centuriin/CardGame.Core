@@ -3,7 +3,7 @@
 using Centuriin.CardGame.Core.Engine.Turn;
 using Centuriin.CardGame.Core.Events;
 
-namespace Centuriin.CardGame.Core.Engine.Default;
+namespace Centuriin.CardGame.Core.Engine.Default.Registrators;
 
 public sealed class PlayerTurnEventRegistrator<TMarker> : IGameRegistrator<TMarker>
     where TMarker : IGameMarker
@@ -22,10 +22,10 @@ public sealed class PlayerTurnEventRegistrator<TMarker> : IGameRegistrator<TMark
         _dispatcher = dispatcher;
     }
 
-    public void Register() => _dispatcher.Register<PlayerMoveEnded>(OnPlayerMoveEnded);
+    public void Register() => _dispatcher.Register<PlayerMoveEndedEvent>(OnPlayerMoveEnded);
 
-    public void Dispose() => _dispatcher.Unregister<PlayerMoveEnded>(OnPlayerMoveEnded);
+    public void Dispose() => _dispatcher.Unregister<PlayerMoveEndedEvent>(OnPlayerMoveEnded);
 
-    private Task OnPlayerMoveEnded(PlayerMoveEnded @event, CancellationToken token) =>
+    private Task OnPlayerMoveEnded(PlayerMoveEndedEvent @event, CancellationToken token) =>
         _turnAutomat.MoveNextAsync(token);
 }
